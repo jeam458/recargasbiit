@@ -1,0 +1,133 @@
+<div class="container col-md-12 col-md-offset-0">
+
+    <div class="panel panel-default panel-body" style="min-height: 400px;">
+        <legend><i class="ion-clipboard" style="margin: -2px 5px 10px 10px;float: left; " />Lista de Recargas</legend>
+        <div class="loading" ng-show="isProfileLoading">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+        </div>
+        <div>
+
+        </div>
+        <div class="has-feedback">
+            <div class=" form-group  col-md-8 ">
+                <input type="text" class="form-control col-md-5" placeholder="Buscar Recarga" ng-model="searchText" />
+                <span class="glyphicon glyphicon-search form-control-feedback" style="margin: -5px 10px 10px 10px;float: left; "></span>
+            </div>
+            <div class="form-group col-md-4 col-md-offset-0">
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addModal" ng-click="agregar()">Nueva Recarga</button>
+            </div>
+        </div>
+        <div class="form-group  col-md-12 ">
+            <h4>Listado de todos las Recargas</h4>
+            <div style="overflow-x:auto;">
+                <table class="table-rwd">
+                    <thead>
+                        <tr class="success">
+                            <th ng-repeat="cabecera in cabecera_recarga">{{cabecera}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="re in recargas | orderBy:'+Nombres' |filter:searchText">
+                            <td><label ng-show="re.NroRecarga">{{re.NroRecarga}}</label></td>
+                            <!--<td ng-show="cl.Ruc">{{cl.Ruc}}</td>-->
+                            <td>{{re.RUSProveedor}}</td>
+                            <td>{{re.NCliente}}</td>
+                            <td>{{re.NVendedor}}</td>
+                            <td>{{re.Monto}}</td>
+                            <td>{{re.fecha| date:'medium'}}</td>
+                            <td><button class="btn btn-warning" data-toggle="modal" data-target="#addModal" ng-click="actualizar(re)">Editar</button></td>
+                            <td><button class="btn btn-danger" ng-click="delRecarga(re)" ng-disabled="!mostrar">Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal fade bd-example-modal-lg" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                        <h4 class="modal-title">{{encabezado}}</h4>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form name="recargaForm" method="post">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Rus Proveedor</label>
+                                    <input type="Number" name="RUSProveedor" class="form-control" ng-model="recarga.RUSProveedor" disabled required/>
+                                    <p ng-show="recargaForm.RUSProveedor.$invalid && !recarga.RUSProveedor.$pristine " class="text-danger">Escriba el RUS del proveedor</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Documento Proveedor</label>
+                                    <input type="Number" name="DProveedor" class="form-control" ng-model="recarga.DProveedor" disabled required/>
+                                    <p ng-show="recargaForm.DProveedor.$invalid && !recarga.DProveedor.$pristine " class="text-danger">Escriba el Documento del proveedor</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Saldo Restante</label>
+                                    <input type="Number" name="saldot" class="form-control" ng-model="saldot" disabled required/>
+                                    <p ng-show="recargaForm.saldot.$invalid && !saldot.$pristine " class="text-danger">Escriba el Documento del proveedor</p>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Nombre Proveedor</label>
+                                    <input type="text" name="NProveedor" class="form-control" ng-model="recarga.NProveedor" disabled required/>
+                                    <p ng-show="recargaForm.NProveedor.$invalid && !recarga.NProveedor.$pristine " class="text-danger">Escriba el nombre del proveedor</p>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Vendedor</label>
+                                    <input type="text" name="NVendedor" class="form-control" ng-model="recarga.NVendedor" required disabled/>
+                                    <p ng-show="recargaForm.NVendedor.$invalid && !recarga.NVendedor.$pristine " class="text-danger">falta nombre del vendedor</p>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label class="control-label">Documento Cliente</label>
+                                    <input type="Number" name="DCliente" class="form-control" ng-model="recarga.DCliente" ng-change="personaa(recarga.DCliente)" required/>
+                                    <p ng-show="recargaForm.DCliente.$invalid && !recarga.DCliente.$pristine " class="text-danger">Falta documento del cliente</p>
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label class="control-label">Nombre Cliente</label>
+                                    <input type="text" name="NCliente" class="form-control" ng-model="recarga.NCliente" required/>
+                                    <p ng-show="recargaForm.NCliente.$invalid && !recarga.NCliente.$pristine " class="text-danger">Falta documento del cliente</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Número de celular</label>
+                                    <input type="Number" name="Nro" class="form-control" ng-model="recarga.Nro" required/>
+                                    <p ng-show="recargaForm.Nro.$invalid && !recarga.Nro.$pristine " class="text-danger">Falta número de celular</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Monto de Recarga</label>
+                                    <input type="Number" name="Monto" class="form-control" ng-model="recarga.Monto" required/>
+                                    <p ng-show="recargaForm.Monto.$invalid && !recarga.Monto.$pristine " class="text-danger">Falta monto de la recarga</p>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Pago</label>
+                                    <input type="Number" name="Pago" class="form-control" ng-model="recarga.Pago" ng-change="pagoo(recargar.Pago)" ng-disabled="!recarga.Monto" required/>
+                                    <p ng-show="recargaForm.Pago.$invalid && !recarga.Pago.$pristine" class="text-danger">Falta pago de recarga</p>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label">Vuelto</label>
+                                    <input type="Number" name="Vuelto" class="form-control" ng-model="recarga.Vuelto" disabled required/>
+                                    <p ng-show="recargaForm.Vuelto.$invalid && !recarga.Vuelto.$pristine" class="text-danger">Falta Vuelto</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addRecarga()" ng-show="booladd" ng-disabled="false">Agregar</button>
+                        <!-- clienteForm.$invalid -->
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="updRecarga(recarga)" ng-show="boolupd" ng-disabled="false">Actualizar</button>
+                        <button ng-show="boolupd" class="btn btn-success" data-dismiss="modal" ng-click="generarpdf()"><span class="fa fa-print" style="margin: 5px 5px 5px 5px;float: left; " aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

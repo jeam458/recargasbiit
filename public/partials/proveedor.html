@@ -1,0 +1,112 @@
+<div class="container col-md-12 col-md-offset-0">
+
+    <div class="panel panel-default panel-body" style="min-height: 400px;">
+        <legend><i class="ion-clipboard" style="margin: -2px 5px 10px 10px;float: left; "/>Lista de Proveedores</legend>
+        <div class="loading" ng-show="isProfileLoading">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+        </div>
+        <div>
+
+        </div>
+        <div class="has-feedback">
+            <div class=" form-group  col-md-8 ">
+                <input type="text" class="form-control col-md-5" placeholder="Buscar Proveedor" ng-model="searchText"/>
+                <span class="glyphicon glyphicon-search form-control-feedback" style="margin: -5px 10px 10px 10px;float: left; "></span>
+            </div>
+            <div class="form-group col-md-4 col-md-offset-0">
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addModal" ng-click="agregar()">Agregar Nuevo Proveedor</button>
+            </div>
+        </div>
+        <div class="form-group  col-md-12 ">
+        <h4>Listado de todos los Proveedores</h4>
+        <div style="overflow-x:auto;">
+            <table class="table-rwd">
+                <thead>
+                    <tr class="success">
+                        <th ng-repeat="cabecera in cabecera_proveedor">{{cabecera}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="pr in proveedores | orderBy:'+Nombres' |filter:searchText">
+                        <td><label ng-show="pr.Documento">{{pr.Documento}}</label></td>
+                        <!--<td ng-show="cl.Ruc">{{cl.Ruc}}</td>-->
+                        <td>{{pr.Nombres}}</td>
+                        <td ng-show="pr.AP">{{pr.AP}}</td>
+                        <td>{{pr.AM}}</td>
+                        <td>{{pr.RUS}}</td>
+                        <td>{{pr.fecha| date:'medium'}}</td>
+                        <td><button class="btn btn-warning" data-toggle="modal" data-target="#addModal" ng-click="actualizar(pr)">Editar</button></td>
+                        <td><button class="btn btn-danger" ng-click="delProveedor(pr)">Eliminar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <div class="modal fade bd-example-modal-lg" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                        <h4 class="modal-title">{{encabezado}}</h4>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form name="proveedorForm" method="post">
+                            <div class="row">
+                                <div class="form-group col-md-6" >
+                                    <label class="control-label">DNI</label>
+                                    <input type="Number" name="Documento" class="form-control" ng-model="proveedor.Documento" ng-change="personaa(proveedor.Documento)" required/>
+                                    <p ng-show="proveedorForm.Documento.$invalid && !proveedor.Documento.$pristine " class="text-danger">Escriba el Numero de DNI</p>
+                                </div>
+                                <div class="form-group col-md-6" >
+                                    <label class="control-label">RUS</label>
+                                    <input type="Number" name="RUS" class="form-control" ng-model="proveedor.RUS" required/>
+                                    <p ng-show="proveedorForm.RUS.$invalid && !proveedor.RUS.$pristine " class="text-danger">Escriba el Numero de RUS</p>
+                                </div>
+                                <div class="form-group col-md-6" >
+                                    <label class="control-label">Nombres</label>
+                                    <input type="text" name="Nombres" class="form-control" ng-model="proveedor.Nombres" required/>
+                                    <p ng-show="proveedorForm.Nombres.$invalid && !proveedor.Nombres.$pristine " class="text-danger">Escriba un nombre</p>
+                                </div>
+                                <div class="form-group col-md-6" >
+                                    <label class="control-label">Apellido Paterno</label>
+                                    <input type="text" name="AP" class="form-control" ng-model="proveedor.AP" required/>
+                                    <p ng-show="proveedorForm.AP.$invalid && !proveedor.AP.$pristine " class="text-danger">Falta apellido paterno</p>
+                                </div>
+                                <div class="form-group col-md-6" >
+                                    <label class="control-label">Apellido Materno</label>
+                                    <input type="text" name="AM" class="form-control" ng-model="proveedor.AM" required/>
+                                    <p ng-show="proveedorForm.AM.$invalid && !proveedor.AM.$pristine " class="text-danger">Falta apellido materno</p>
+                                </div>
+                                
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Limite superior</label>
+                                    <input type="Number" name="telefono" class="form-control" ng-model="proveedor.Lsuperior" required/>
+                                    <p ng-show="proveedorForm.telefono.$invalid && !proveedor.Lsuperior.$pristine" class="text-danger">Falta Limite Superior</p>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Salto Comprado</label>
+                                    <input type="Number" name="telefono2" class="form-control" ng-model="proveedor.Saldo" required/>
+                                    <p ng-show="proveedorForm.telefono2.$invalid && !proveedor.Saldo.$pristine" class="text-danger">Falta saldo</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addProveedor()" ng-show="booladd" ng-disabled="false">Agregar</button>
+                        <!-- clienteForm.$invalid -->
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="updProveedor(proveedor)" ng-show="boolupd" ng-disabled="false">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
